@@ -33,7 +33,6 @@ RUN chmod +x /etc/services.d/serf/run
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# TODO: [Serf] Expose ports
 # Expose the ports for Serf
 EXPOSE 7946 7373
 

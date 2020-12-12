@@ -113,7 +113,7 @@ Après toutes les modifications précédentes, on reprend une capture d'écran d
 
 <img src="./CHAP1-1.png">
 
-#### Question 2 A REVOIR
+#### Question 2 A VERIFIER
 Cette tâche a pour but de modifier le comportement originel du système de docker qui est basiquement: un processus pour un conteneur. La configuration est assez difficile car elle demande d'imbriquer plusieurs éléments avec le superviseur S6.
 
 Cette installation consiste alors à remplacer le mode de lancement normal d'un conteneur en passant avec un superviseur qui utilisera son propre script de fonctionnement pour gérer les processus du conteneur dans lequel il est installé.
@@ -178,11 +178,30 @@ rm -r /webapp/scripts
 
 ### RÉPONSES
 
-#### Question 1
+#### Question 1 CA DEVRAIT PAS MARCHER MOI CA MARCHE QUESTION
 
-#### Question 2
+On cherche à récupérer les logs de nos conteneurs. On commence par lancer le conteneur **ha** avec la commande suivante:
+```
+docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network brige --link s1 --link s2 --name ha <imageName>
+```
+Puis le conteneur **s1** avec la commande:
+```
+docker run -d --network heig --name s1 <imageName>
+```
 
-#### Question 3
+#### Question 2 A VERIFIER
+
+Le problème que les noeuds soient codés en dure dans les configurations peut s'adresser avec une solution comme **Serf**. En effet, **Serf** permet de rendre plus fléxible la gestion des noeuds en les rendant dynamiques.
+
+C'est à travers son système de communication que **Serf** va permettre aux serveurs d'application de communiquer avec le load balancer pour pouvoir le 'reconfigurer' avec leurs apparitions et disparitions.
+
+**Serf** peut maintenir une liste de membre par exemple des noeuds et lorsque l'un d'entre eux est en échec, **Serf** peut communiquer avec les autres membres et le load balancer pour l'avertir de l'événement et modifier ses configurations.
+
+#### Question 3 A VERIFIER
+
+**Serf** fonctionne grâce à l'utilisation de **Serf agent**. Chaque noeud doit posséder un **Serf agent** afin de pouvoir récupérer ses informations, gérer des potentiels événements, détecter des crashs... Ceux sont ces **Serf agents** qui définissent ensemble un **Serf cluster**.
+
+Les fonctionnalités de **Serf** fonctionnent grâce au **GOSSIP protocol** qui permet une communication rapide entre les différents agents d'un même cluster. Le **GOSSIP protocol** fonctionne en utilisant UDP et est basé sur **"SWIM: Scalable Weakly-consistent infection-style Process Group Membership Protocol"**. Par exemple, afin de pouvoir détecter l'inactivité d'un noeud **Serf** passe par le protocole **GOSSIP** qui va envoyer de manière périodique et aléatoirement des vérifications. Si un noeud ne répond pas à la vérification, il sera noté suspicieux par tous les noeuds du cluster (par propagation). Si le noeud suspicieux ne lève pas les suspicions, il sera considérer comme éteint et sortira du cluster.
 
 ## Difficultés
 
