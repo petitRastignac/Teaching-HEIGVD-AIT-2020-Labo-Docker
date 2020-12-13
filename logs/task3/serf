@@ -1,0 +1,5 @@
+root@66643f282b0f:/# cat /var/log/serf.log
+Member join script triggered
+Member join event received from: 66643f282b0f with role balancer
+Member join script triggered
+Member join event received from: ab6c73a78ca4 with role backend

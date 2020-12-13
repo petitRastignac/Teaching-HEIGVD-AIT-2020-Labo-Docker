@@ -182,12 +182,14 @@ rm -r /webapp/scripts
 
 On cherche à récupérer les logs de nos conteneurs. On commence par lancer le conteneur **ha** avec la commande suivante:
 ```
-docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network brige --link s1 --link s2 --name ha <imageName>
+docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network heig --link s1 --link s2 --name ha haproxy
 ```
-Puis le conteneur **s1** avec la commande:
+Puis les conteneurs **s1** et **s2** avec les commandes:
 ```
-docker run -d --network heig --name s1 <imageName>
+docker run -d --network heig --name s1 webapp
+docker run -d --network heig --name s2 webapp
 ```
+Les logs de cette étape sont dans le fichier `/logs/task2`
 
 #### Question 2 A VERIFIER
 
@@ -202,6 +204,143 @@ C'est à travers son système de communication que **Serf** va permettre aux ser
 **Serf** fonctionne grâce à l'utilisation de **Serf agent**. Chaque noeud doit posséder un **Serf agent** afin de pouvoir récupérer ses informations, gérer des potentiels événements, détecter des crashs... Ceux sont ces **Serf agents** qui définissent ensemble un **Serf cluster**.
 
 Les fonctionnalités de **Serf** fonctionnent grâce au **GOSSIP protocol** qui permet une communication rapide entre les différents agents d'un même cluster. Le **GOSSIP protocol** fonctionne en utilisant UDP et est basé sur **"SWIM: Scalable Weakly-consistent infection-style Process Group Membership Protocol"**. Par exemple, afin de pouvoir détecter l'inactivité d'un noeud **Serf** passe par le protocole **GOSSIP** qui va envoyer de manière périodique et aléatoirement des vérifications. Si un noeud ne répond pas à la vérification, il sera noté suspicieux par tous les noeuds du cluster (par propagation). Si le noeud suspicieux ne lève pas les suspicions, il sera considérer comme éteint et sortira du cluster.
+
+## Chapitre 3: Réagir au changement dans la liste des membres
+
+Nous allons ajouter des scripts pour que **Serf** puisse gérer quand un membre quitter ou rejoint la liste des membres.
+
+```
+touch ./ha/scripts/member-join.sh && chmod +x ./ha/scripts/member-join.sh
+touch ./ha/scripts/member-leave.sh && chmod +x ./ha/scripts/member-leave.sh
+```
+
+Puis maintenant on copie les scripts du répertoire git pour **member-join.sh** et **member-leave.sh**.
+
+Puis on modifie l'image Docker de **HAProxy** pour faire en sorte que le conteneur puisse les utiliser:
+
+```
+# TODO: [Serf] Copy events handler scripts
+COPY scripts /serf-handlers
+RUN chmod +x /serf-handlers/member-join.sh
+RUN chmod +x /serf-handlers/member-leave.sh
+```
+
+Maintenant, nous reconstruisons l'image pour **HAProxy** et nous lançons la commande suivante **(On récupère les logs)**:
+
+```
+docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network heig --name ha haproxy
+```
+
+Puis, on lance un des deux backend conteneurs **(On récupère les logs puis rapidement encore ceux de ha)**:
+
+```
+docker run -d --network heig --name s1 webapp
+docker run -d --network heig --name s2 webapp
+```
+
+Maintenant, nous allons récupérer les logs dans le fichier serf.log dans le conteneur de **HAProxy** avec les commandes suivantes:
+
+```
+docker exec -ti ha /bin/bash
+```
+```
+cat /var/log/serf.log
+```
+
+### RÉPONSES
+
+#### Question 1
+
+Les logs sont disponibles dans le répertoire dans le dossier `/logs/task3`:
+- `haSEUL` représente les logs de **ha** quand il est le seul conteneur a être lancé.
+- `s1` représente les logs de **s1** quand il est lancé après **ha**
+- `haAPRESs1` représente les logs de **ha** après le lancement de **s1**, on remarque que le script `member-join.sh` est lancé par l'apparition du noeud de **s1**.
+
+#### Question 2
+
+Les logs sont disponibles dans le répertoire dans le dossier `/logs/task3` sous le nom de `serf`.
+
+## Chapitre 4: Utilisation d'un moteur de template pour facilement générer des fichiers de configuration
+
+Pour la mise en place du moteur de template nous allons utiliser **NodeJS** et **Handlebars**.
+
+On configure alors le Dockerfile de **HAProxy** pour ajouter l'installation de **NodeJS**:
+
+```
+# TODO: [HB] Install NodeJS
+# Install NodeJS
+RUN curl -sSLo /tmp/node.tar.xz https://nodejs.org/dist/v14.15.1/node-v14.15.1-linux-x64.tar.xz \
+  && tar -C /usr/local --strip-components 1 -xf /tmp/node.tar.xz \
+  && rm -f /tmp/node.tar.xz
+```
+
+Pour cela on doit ajouter l'installation de `xz-utils`:
+
+```
+# Install some tools
+# TODO: [HB] Update to install required tool to install NodeJS
+RUN apt-get update && apt-get -y install wget curl vim iputils-ping rsyslog xz-utils
+```
+
+Puis on installe **Handlebars**:
+
+```
+# TODO: [HB] Install Handlebars
+# Install the handlebars-cmd node module and its dependencies
+RUN npm install -g handlebars-cmd
+```
+
+Maintenant nous allons mettre à jour le **handler script** pour utiliser **Handlebars**. Alors, on créée le fichier `haproxy.cfg.hb` dans le dossier `ha/config`, on utilise la commande suivante:
+
+```
+echo "Container {{ name }} has joined the Serf cluster with the following IP address: {{ ip }}" >> /ha/config/haproxy.cfg.hb
+```
+
+Puis on modifie le Dockerfile pour récupérer ce fichier dans les futures conteneurs:
+
+```
+# TODO: [HB] Copy the haproxy configuration template
+RUN mkdir /config
+COPY config/haproxy.cfg.hb /config
+```
+
+On met à jour notre script `member-join.sh` avec le modèle fournit dans le répertoire github.
+
+Et maintenant, on reconstruit l'image de **HAProxy**. Puis on lance le conteneur et avec les commandes:
+
+```
+docker exec -ti ha /bin/bash
+cat /tmp/haproxy.cfg
+```
+
+On récupère les logs que l'on met dans le fichier `/logs/task4` avec pour nom `haproxycfg1`.
+
+On va faire un test end-to-end pour vérifier que tout fonctionne. Alors on va allumer les conteneurs **s1** et **s2** et vérifier les modifications dans les configurations dans le conteneur **ha**.
+
+- On allume avec la commande `docker run -d --network heig --name s1 webapp`, le conteneur s1. Puis on vérifie dans le conteneur **ha**, les modifications de configurations (fichier `haproxycfgS1` dans le dossier `/logs/task4`).
+
+- On fait de même avec **s2** (fichier `haproxycfgS2` dans le dossier `/logs/task4`).
+
+### RÉPONSES
+
+#### Question 1 A FAIRE
+
+#### Question 2 A FAIRE
+
+#### Question 3
+
+Dans le fichier `/logs/task4`, il y a 7 fichiers:
+3 premiers fichiers de logs de `/tmp/haproxy.cfg`:
+- `haproxycfg1`, la configuration de la première étape, c'est-à-dire le lancement du conteneur **ha**.
+- `haproxycfgS1`, la configuration de la deuxième étape, c'est-à-dire le lancement du conteneur **s1**.
+- `haproxycfgS2`, la configuration de la troisième étape, c'est-à-dire le lancement du conteneur **s2**.
+4 fichiers d'informations Docker sur les conteneurs:
+- `dockerps`, le résultat de la commande `docker ps`
+- `inspectha`, le résultat de l'inspection du conteneur **ha**;
+- `inspects1`, le résultat de l'inspection du conteneur **s1**;
+- `inspects2`, le résultat de l'inspection du conteneur **s2**;
+
+#### Question 4 A FAIRE
 
 ## Difficultés
 
