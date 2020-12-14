@@ -65,11 +65,11 @@
 
 **[Conclusion](#conclusion)**
 
-## Chapitre 0: Identification des problèmes et installation des outils <a name="C0"></a>
+##  <a name="C0"></a> Chapitre 0: Identification des problèmes et installation des outils
 
-### Identification des problèmes <a name="C0-pb"></a>
+### <a name="C0-pb"></a> Identification des problèmes
 
-### Installation des outils <a name="C0-outils"></a>
+### <a name="C0-outils"></a> Installation des outils
 
 On commence par installer le projet avec la commande:
 `docker-compose up --build`
@@ -90,9 +90,9 @@ ce4a0057725e        heig                bridge              local
 ```
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C0-rep"></a>
+### <a name="C0-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionFinis">Question 1</span> <a name="C0-q1"></a>
+#### <a name="C0-q1"></a> <span class="questionFinis">Question 1</span>
 Nous pouvons nous connecter sur l'adresse suivante http://192.168.42.42:1936:
 
 <img src="CHAP0-Intallation-1.png">
@@ -100,7 +100,7 @@ Nous pouvons nous connecter sur l'adresse suivante http://192.168.42.42:1936:
 #### <span class="questionFinis">Question 2</span> <a name="C0-q2"></a>
 Lien vers le répertoire du laboratoire: https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker
 
-## Chapitre 1: Ajouter un superviseur de processus pour faire tourner plusieurs processus <a name="C1"></a>
+## <a name="C1"></a> Chapitre 1: Ajouter un superviseur de processus pour faire tourner plusieurs processus
 
 Docker est un technologie qui a été mise en place avec l'esprit suivant: un conteneur, un processus. Dès lors, dès qu'un processus se termine son conteneur va s'arrêter. Afin d'éviter cette situation nous allons utilise run superviseur de processus: S6.
 
@@ -166,14 +166,14 @@ RUN chmod +x /etc/services.d/node/run
 ```
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C1-rep"></a>
+### <a name="C1-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionFinis">Question 1</span> <a name="C1-q1"></a>
+#### <a name="C1-q1"></a> <span class="questionFinis">Question 1</span>
 Après toutes les modifications précédentes, on reprend une capture d'écran du tableau de bord à l'adresse: http://192.168.42.42:1936.
 
 <img src="./CHAP1-1.png">
 
-#### <span class="questionEnCours">Question 2 A VERIFIER</span> <a name="C1-q2"></a>
+#### <a name="C1-q2"></a> <span class="questionEnCours">Question 2 A VERIFIER</span>
 Cette tâche a pour but de modifier le comportement originel du système de docker qui est basiquement: un processus pour un conteneur. La configuration est assez difficile car elle demande d'imbriquer plusieurs éléments avec le superviseur S6.
 
 Cette installation consiste alors à remplacer le mode de lancement normal d'un conteneur en passant avec un superviseur qui utilisera son propre script de fonctionnement pour gérer les processus du conteneur dans lequel il est installé.
@@ -184,7 +184,7 @@ On installe ce genre de processus pour éviter que les conteneurs, en cas de cra
     - Faciliter le lancement des différents process
     - Utiliser plusieurs process qui ont besoin d'une certaine coordination
 
-## Chapitre 2: Ajout d'un outil pour gérer l'appartenance au cluster des serveurs WEB <a name="C2"></a>
+## <a name="C2"></a> Chapitre 2: Ajout d'un outil pour gérer l'appartenance au cluster des serveurs WEB
 
 Le but de cette partie est de rendre l'infrastructure plus flexible pour pouvoir ajouter ou supprimer dynamiquement des serveurs web. Pour cela nous allons utiliser **serf** qui va nous permettre de faire communiquer les agents entre eux par **un système peer-to-peer décentralisé**.
 
@@ -237,9 +237,9 @@ rm -r /webapp/scripts
 ```
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C2-rep"></a>
+### <a name="C2-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionEnCours">Question 1 CA DEVRAIT PAS MARCHER MOI CA MARCHE QUESTION</span> <a name="C2-q1"></a>
+#### <a name="C2-q1"></a> <span class="questionEnCours">Question 1 CA DEVRAIT PAS MARCHER MOI CA MARCHE QUESTION</span>
 
 On cherche à récupérer les logs de nos conteneurs. On commence par lancer le conteneur **ha** avec la commande suivante:
 ```
@@ -252,7 +252,7 @@ docker run -d --network heig --name s2 webapp
 ```
 Les logs de cette étape sont dans le fichier `/logs/task2`
 
-#### <span class="questionEnCours">Question 2 A VERIFIER</span> <a name="C2-q2"></a>
+#### <a name="C2-q2"></a> <span class="questionEnCours">Question 2 A VERIFIER</span>
 
 Le problème que les noeuds soient codés en dure dans les configurations peut s'adresser avec une solution comme **Serf**. En effet, **Serf** permet de rendre plus fléxible la gestion des noeuds en les rendant dynamiques.
 
@@ -260,13 +260,13 @@ C'est à travers son système de communication que **Serf** va permettre aux ser
 
 **Serf** peut maintenir une liste de membre par exemple des noeuds et lorsque l'un d'entre eux est en échec, **Serf** peut communiquer avec les autres membres et le load balancer pour l'avertir de l'événement et modifier ses configurations.
 
-#### <span class="questionEnCours">Question 3 A VERIFIER</span> <a name="C2-q3"></a>
+#### <a name="C2-q3"></a> <span class="questionEnCours">Question 3 A VERIFIER</span>
 
 **Serf** fonctionne grâce à l'utilisation de **Serf agent**. Chaque noeud doit posséder un **Serf agent** afin de pouvoir récupérer ses informations, gérer des potentiels événements, détecter des crashs... Ceux sont ces **Serf agents** qui définissent ensemble un **Serf cluster**.
 
 Les fonctionnalités de **Serf** fonctionnent grâce au **GOSSIP protocol** qui permet une communication rapide entre les différents agents d'un même cluster. Le **GOSSIP protocol** fonctionne en utilisant UDP et est basé sur **"SWIM: Scalable Weakly-consistent infection-style Process Group Membership Protocol"**. Par exemple, afin de pouvoir détecter l'inactivité d'un noeud **Serf** passe par le protocole **GOSSIP** qui va envoyer de manière périodique et aléatoirement des vérifications. Si un noeud ne répond pas à la vérification, il sera noté suspicieux par tous les noeuds du cluster (par propagation). Si le noeud suspicieux ne lève pas les suspicions, il sera considérer comme éteint et sortira du cluster.
 
-## Chapitre 3: Réagir au changement dans la liste des membres <a name="C3"></a>
+## <a name="C3"></a> Chapitre 3: Réagir au changement dans la liste des membres
 
 Nous allons ajouter des scripts pour que **Serf** puisse gérer quand un membre quitter ou rejoint la liste des membres.
 
@@ -309,20 +309,20 @@ cat /var/log/serf.log
 ```
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C3-rep"></a>
+### <a name="C3-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionFinis">Question 1</span> <a name="C3-q1"></a>
+#### <a name="C3-q1"></a> <span class="questionFinis">Question 1</span>
 
 Les logs sont disponibles dans le répertoire dans le dossier `/logs/task3`:
 - `haSEUL` représente les logs de **ha** quand il est le seul conteneur a être lancé.
 - `s1` représente les logs de **s1** quand il est lancé après **ha**
 - `haAPRESs1` représente les logs de **ha** après le lancement de **s1**, on remarque que le script `member-join.sh` est lancé par l'apparition du noeud de **s1**.
 
-#### <span class="questionFinis">Question 2</span> <a name="C3-q2"></a>
+#### <a name="C3-q2"></a> <span class="questionFinis">Question 2</span>
 
 Les logs sont disponibles dans le répertoire dans le dossier `/logs/task3` sous le nom de `serf`.
 
-## Chapitre 4: Utilisation d'un moteur de template pour facilement générer des fichiers de configuration <a name="C4"></a>
+## <a name="C4"></a> Chapitre 4: Utilisation d'un moteur de template pour facilement générer des fichiers de configuration
 
 Pour la mise en place du moteur de template nous allons utiliser **NodeJS** et **Handlebars**.
 
@@ -384,13 +384,13 @@ On va faire un test end-to-end pour vérifier que tout fonctionne. Alors on va a
 - On fait de même avec **s2** (fichier `haproxycfgS2` dans le dossier `/logs/task4`).
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C4-rep"></a>
+### <a name="C4-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionEnCours">Question 1 A FAIRE</span> <a name="C4-q1"></a>
+#### <a name="C4-q1"></a> <span class="questionEnCours">Question 1 A FAIRE</span>
 
-#### <span class="questionEnCours">Question 2 A FAIRE</span> <a name="C4-q2"></a>
+#### <a name="C4-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
 
-#### <span class="questionFinis">Question 3</span> <a name="C4-q3"></a>
+#### <a name="C4-q3"></a> <span class="questionFinis">Question 3</span>
 
 Dans le fichier `/logs/task4`, il y a 7 fichiers:
 3 premiers fichiers de logs de `/tmp/haproxy.cfg`:
@@ -403,11 +403,11 @@ Dans le fichier `/logs/task4`, il y a 7 fichiers:
 - `inspects1`, le résultat de l'inspection du conteneur **s1**;
 - `inspects2`, le résultat de l'inspection du conteneur **s2**;
 
-#### <span class="questionEnCours">Question 4 A FAIRE</span> <a name="C4-q4"></a>
+#### <a name="C4-q4"></a> <span class="questionEnCours">Question 4 A FAIRE</span>
 
 
 
-## Chapitre 5: Générer une nouvelle configuration de load balancer quand la liste des membres changent <a name="C5"></a>
+## <a name="C5"></a> Chapitre 5: Générer une nouvelle configuration de load balancer quand la liste des membres changent
 
 Premièrement, on va copier/coller le contenue de `ha/config/haproxy.cfg` dans `ha/config/haproxy.cfg.hb` avec la commande:
 
@@ -446,9 +446,9 @@ RUN mkdir /nodes
 On relance le tout comme dans l'étape précédente.
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C5-rep"></a>
+### <a name="C5-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionFinis">Question 1</span> <a name="C5-q1"></a>
+#### <a name="C5-q1"></a> <span class="questionFinis">Question 1</span>
 
 Dans le fichier `/logs/task5`:
 3 premiers fichiers de logs de `/usr/local/etc/haproxy/haproxy.cfg`:
@@ -461,7 +461,7 @@ Dans le fichier `/logs/task5`:
 - `inspectS1`, le résultat de l'inspection du conteneur **s1**;
 - `inspectS2`, le résultat de l'inspection du conteneur **s2**;
 
-#### <span class="questionFinis">Question 2</span> <a name="C5-q2"></a>
+#### <a name="C5-q2"></a> <span class="questionFinis">Question 2</span>
 
 On trouve deux fichiers dans le dossier `/nodes`:
 ```
@@ -470,7 +470,7 @@ root@1c3d6d7aac49:/nodes# ls
 ```
 On retrouve ces informations dans le fichier `nodesFiles2` dans le dossier `/logs/task5`.
 
-#### <span class="questionFinis">Question 3</span> <a name="C5-q3"></a>
+#### <a name="C5-q3"></a> <span class="questionFinis">Question 3</span>
 
 On arrête le conteneur **s2**, on obtient alors dans le dossier `/logs/task5`:
 - Un nouveau fichier de configuration `haproxycfgSTOP`
@@ -480,24 +480,34 @@ root@1c3d6d7aac49:/nodes# ls
 92d0365bce2d
 ```
 
-#### <span class="questionEnCours">Question 4 - Optionnelle</span> <a name="C5-q4"></a>
+#### <a name="C5-q4"></a> <span class="questionEnCours">Question 4 - Optionnelle</span>
  
-## Chapitre 6: Faire recharger automatiquement sa nouvelle configuration au Load Balancer <a name="C6"></a>
+## <a name="C6"></a> Chapitre 6: Faire recharger automatiquement sa nouvelle configuration au Load Balancer
 
+Nous allons maintenant faire en sorte que **HAProxy** recharge sa configuration le plus rapidement possible.
 
+On commence par remplacer `TODO: [CFG] Replace this command` (dans le fichier `/ha/services/ha/run`) par la partie de script fournit dans le répertoire du laboratoire.
+
+Maintenant, nous devons modifier les scripts `member-join.sh` et `member-left.sh` pour faire en sorte que **HAProxy** soit recharger quand sa configuration est modifiée. On remplace `TODO: [CFG] Add the command to restart HAProxy` par:
+```
+# Send a SIGHUP to the process. It will restart HAProxy
+s6-svc -h /var/run/s6/services/ha
+```
+
+On peut alors reconstruire et lancer nos images.
 
 ------------
-### <span class="reponse">RÉPONSES</span> <a name="C6-rep"></a>
+### <a name="C6-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <span class="questionEnCours">Question 1 A FAIRE</span> <a name="C6-q1"></a>
+#### <a name="C6-q1"></a> <span class="questionEnCours">Question 1 A FAIRE</span>
 
-#### <span class="questionEnCours">Question 2 A FAIRE</span> <a name="C6-q2"></a>
+#### <a name="C6-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
 
-#### <span class="questionEnCours">Question 3 A FAIRE</span> <a name="C6-q3"></a>
+#### <a name="C6-q3"></a><span class="questionEnCours">Question 3 - Optionnelle</span>
 
-## Difficultés <a name="diff"></a>
+## <a name="diff"></a> Difficultés
 
-## Conclusion <a name="conclusion"></a>
+## <a name="conclusion"></a> Conclusion
 
 
 <style>
