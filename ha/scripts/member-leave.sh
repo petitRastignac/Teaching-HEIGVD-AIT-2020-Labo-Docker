@@ -44,6 +44,6 @@ if [[ "$BACKEND_UNREGISTERED" = true ]]; then
   # trailing comma from the hosts list.
   handlebars --addresses "[$(echo $HOSTS | sed s/,$//)]" < /config/haproxy.cfg.hb > /usr/local/etc/haproxy/haproxy.cfg
 
-# Send a SIGHUP to the process. It will restart HAProxy
+  # TODO: [CFG] Add the command to restart HAProxy
 s6-svc -h /var/run/s6/services/ha
 fi

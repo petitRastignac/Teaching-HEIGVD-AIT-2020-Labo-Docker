@@ -13,6 +13,8 @@
 
 &ensp;&ensp;&ensp;&ensp;[Identification des problèmes](#C0-pb)
 
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[M1](#C0-M1)&ensp;[M2](#C0-M2)&ensp;[M3](#C0-M3)&ensp;[M4](#C0-M4)&ensp;[M5](#C0-M5)&ensp;[M6](#C0-M6)
+
 &ensp;&ensp;&ensp;&ensp;[Installation des outils](#C0-pb)
 
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;[Réponses:](#C0-rep)
@@ -68,6 +70,24 @@
 ##  <a name="C0"></a> Chapitre 0: Identification des problèmes et installation des outils
 
 ### <a name="C0-pb"></a> Identification des problèmes
+
+On veut être capable d'ajouter ou de supprimer dynamiquement des serveurs sur notre système pour prendre en charge une potentielle augmentation de traffic.
+
+Tout cela dans un contexte dans lequel à cause d'un bogue non découvert les serveurs peuvent crash de manière non prédictible.
+
+On reprend le système que nous avons mis en place dans le laboratoire différent pour répondre aux questions:
+
+#### <a name="C0-M1"></a> <span class="questionEnCours">[M1] A FAIRE</span>
+
+#### <a name="C0-M2"></a> <span class="questionEnCours">[M2] A FAIRE</span>
+
+#### <a name="C0-M3"></a> <span class="questionEnCours">[M3] A FAIRE</span>
+
+#### <a name="C0-M4"></a> <span class="questionEnCours">[M4] A FAIRE</span>
+
+#### <a name="C0-M5"></a> <span class="questionEnCours">[M5] A FAIRE</span>
+
+#### <a name="C0-M6"></a> <span class="questionEnCours">[M6] A FAIRE</span>
 
 ### <a name="C0-outils"></a> Installation des outils
 
@@ -173,7 +193,7 @@ Après toutes les modifications précédentes, on reprend une capture d'écran d
 
 <img src="./CHAP1-1.png">
 
-#### <a name="C1-q2"></a> <span class="questionEnCours">Question 2 A VERIFIER</span>
+#### <a name="C1-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
 Cette tâche a pour but de modifier le comportement originel du système de docker qui est basiquement: un processus pour un conteneur. La configuration est assez difficile car elle demande d'imbriquer plusieurs éléments avec le superviseur S6.
 
 Cette installation consiste alors à remplacer le mode de lancement normal d'un conteneur en passant avec un superviseur qui utilisera son propre script de fonctionnement pour gérer les processus du conteneur dans lequel il est installé.
@@ -252,7 +272,7 @@ docker run -d --network heig --name s2 webapp
 ```
 Les logs de cette étape sont dans le fichier `/logs/task2`
 
-#### <a name="C2-q2"></a> <span class="questionEnCours">Question 2 A VERIFIER</span>
+#### <a name="C2-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
 
 Le problème que les noeuds soient codés en dure dans les configurations peut s'adresser avec une solution comme **Serf**. En effet, **Serf** permet de rendre plus fléxible la gestion des noeuds en les rendant dynamiques.
 
@@ -260,7 +280,7 @@ C'est à travers son système de communication que **Serf** va permettre aux ser
 
 **Serf** peut maintenir une liste de membre par exemple des noeuds et lorsque l'un d'entre eux est en échec, **Serf** peut communiquer avec les autres membres et le load balancer pour l'avertir de l'événement et modifier ses configurations.
 
-#### <a name="C2-q3"></a> <span class="questionEnCours">Question 3 A VERIFIER</span>
+#### <a name="C2-q3"></a> <span class="questionEnCours">Question 3 A FAIRE</span>
 
 **Serf** fonctionne grâce à l'utilisation de **Serf agent**. Chaque noeud doit posséder un **Serf agent** afin de pouvoir récupérer ses informations, gérer des potentiels événements, détecter des crashs... Ceux sont ces **Serf agents** qui définissent ensemble un **Serf cluster**.
 
@@ -499,7 +519,56 @@ On peut alors reconstruire et lancer nos images.
 ------------
 ### <a name="C6-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <a name="C6-q1"></a> <span class="questionEnCours">Question 1 A FAIRE</span>
+#### <a name="C6-q1"></a> <span class="questionFinis">Question 1</span>
+
+Pour lancer **HAProxy**, on utilise la commande:
+```
+docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network heig --name ha haproxy
+```
+Pour lancer un **noeud**, on utilise la commande:
+```
+docker run -d --network heig --name s1 webapp
+```
+
+On commande par lancer **HAProxy**:
+<img src="CH6-1.png">
+On remarque qu'il n'y a pas de noeuds d'ouvert. Maintenant, nous allons lancer 3 noeuds (dans le dossier `/logs/task6` fichier `dockerps1`):
+```
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+fbef6f42095c        webapp              "/init"             3 seconds ago       Up 2 seconds        3000/tcp, 7373/tcp, 7946/tcp                                                             s3
+375878a195ab        webapp              "/init"             5 seconds ago       Up 5 seconds        3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+e2bcd5d91a2c        webapp              "/init"             11 seconds ago      Up 10 seconds       3000/tcp, 7373/tcp, 7946/tcp                                                             s1
+1bab7b55bf3a        haproxy             "/init"             11 minutes ago      Up 11 minutes       0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
+```
+On remarque que l'on a bien **3 webapps** et notre **HAProxy**, ce qui nous donne le panel **HAProxy** suivant:
+
+<img src="CH6-2.png">
+
+On retrouve bien nos **3 noeuds**. Maintenant, nous allons essayer d'en rajouter encore **2** (fichier `dockerps2`):
+```
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+1d5ad2f6703f        webapp              "/init"             53 seconds ago      Up 51 seconds       3000/tcp, 7373/tcp, 7946/tcp                                                             s5
+bf5076b80f19        webapp              "/init"             55 seconds ago      Up 54 seconds       3000/tcp, 7373/tcp, 7946/tcp                                                             s4
+fbef6f42095c        webapp              "/init"             6 minutes ago       Up 6 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s3
+375878a195ab        webapp              "/init"             6 minutes ago       Up 6 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+e2bcd5d91a2c        webapp              "/init"             6 minutes ago       Up 6 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s1
+1bab7b55bf3a        haproxy             "/init"             18 minutes ago      Up 18 minutes       0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
+```
+
+<img src="CH6-3.png">
+
+Maintenant, nous allons essayer de retirer des noeuds, nous allons enlever les noeuds **s1**,**s5** et **s3**. Il devrait en rester alors **2** (fichier `dockerps3`):
+```
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+bf5076b80f19        webapp              "/init"             3 minutes ago       Up 3 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s4
+375878a195ab        webapp              "/init"             9 minutes ago       Up 9 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+1bab7b55bf3a        haproxy             "/init"             20 minutes ago      Up 20 minutes       0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
+```
+
+<img src="CH6-4.png">
+
+On remarque que le système fonctionne bien. Il supprime les noeuds qui sont inactifs et ajoute les nouveaux noeuds au système.
+
 
 #### <a name="C6-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
 
