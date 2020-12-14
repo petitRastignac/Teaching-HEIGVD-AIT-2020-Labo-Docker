@@ -1,0 +1,624 @@
+<!DOCTYPE html><html><head>
+      <title>RapportAIT</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/rastignac/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.5.13/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="ait-laboratoire-4-docker">AIT laboratoire 4 - Docker</h1>
+
+<p><code>Auteurs: CANIPEL Vincent et SEMBLAT Cl&#xE9;ment</code></p>
+<h2 class="mume-header" id="introduction-a-nameintroductiona">Introduction <a name="introduction" href></a></h2>
+
+<h2 class="mume-header" id="table-des-mati%C3%A8res-a-nametableofcontenta">Table des mati&#xE8;res <a name="tableofcontent" href></a></h2>
+
+<p><a href="#introduction">Introduction</a><br>
+<a href="#tableofcontent">Table des mati&#xE8;res</a><br>
+<a href="#C0">Chapitre 0: Identification des probl&#xE8;mes et installation des outils</a><br>
+&#x2002;&#x2002;&#x2002;&#x2002;<a href="#C0-pb">Identification des probl&#xE8;mes</a></p>
+<p>&#x2002;&#x2002;&#x2002;&#x2002;<a href="#C0-pb">Installation des outils</a><br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;<a href="#C0-rep">R&#xE9;ponses</a></p>
+<h2 class="mume-header" id="chapitre-0-identification-des-probl%C3%A8mes-et-installation-des-outils-a-namec0a">Chapitre 0: Identification des probl&#xE8;mes et installation des outils <a name="C0" href></a></h2>
+
+<h3 class="mume-header" id="a-namec0-pbaidentification-des-probl%C3%A8mes"><a name="C0-pb" href></a>Identification des probl&#xE8;mes</h3>
+
+<h3 class="mume-header" id="installation-des-outils-a-namec0-outilsa">Installation des outils <a name="C0-outils" href></a></h3>
+
+<p>On commence par installer le projet avec la commande:<br>
+<code>docker-compose up --build</code><br>
+Ensuite, nous pouvons v&#xE9;rifier que les 3 conteneurs soient bien en marche:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>CONTAINER ID        IMAGE                                          COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+b253ff9a07c6        teaching-heigvd-ait-2020-labo-docker_webapp1   &quot;docker-entrypoint.s&#x2026;&quot;   57 seconds ago      Up 56 seconds       0.0.0.0:4000-&gt;3000/tcp                                               s1
+cb7f7c98f379        teaching-heigvd-ait-2020-labo-docker_webapp2   &quot;docker-entrypoint.s&#x2026;&quot;   57 seconds ago      Up 56 seconds       0.0.0.0:4001-&gt;3000/tcp                                               s2
+6b4c77010e07        teaching-heigvd-ait-2020-labo-docker_haproxy   &quot;/docker-entrypoint.&#x2026;&quot;   57 seconds ago      Up 57 seconds       0.0.0.0:80-&gt;80/tcp, 0.0.0.0:1936-&gt;1936/tcp, 0.0.0.0:9999-&gt;9999/tcp   ha
+</code></pre><p>Maintenant, nous v&#xE9;rifions le r&#xE9;seaux heig:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>NETWORK ID          NAME                DRIVER              SCOPE
+3b551039746f        bridge              bridge              local
+ce4a0057725e        heig                bridge              local
+84becfc0f45a        host                host                local
+1e37a6d822d3        none                null                local
+</code></pre><hr>
+<h3 class="mume-header" id="a-namec0-repaspan-classreponser%C3%A9ponsesspan"><a name="C0-rep" href></a><span class="reponse">R&#xC9;PONSES</span></h3>
+
+<h4 class="mume-header" id="span-classquestionfinisquestion-1span-a-namec0-q1a"><span class="questionFinis">Question 1</span> <a name="C0-q1" href></a></h4>
+
+<p>Nous pouvons nous connecter sur l&apos;adresse suivante <a href="http://192.168.42.42:1936">http://192.168.42.42:1936</a>:</p>
+<img src="CHAP0-Intallation-1.png">
+<h4 class="mume-header" id="span-classquestionfinisquestion-2span-a-namec0-q2a"><span class="questionFinis">Question 2</span> <a name="C0-q2" href></a></h4>
+
+<p>Lien vers le r&#xE9;pertoire du laboratoire: <a href="https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker">https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker</a></p>
+<h2 class="mume-header" id="chapitre-1-ajouter-un-superviseur-de-processus-pour-faire-tourner-plusieurs-processus-a-namec1a">Chapitre 1: Ajouter un superviseur de processus pour faire tourner plusieurs processus <a name="C1" href></a></h2>
+
+<p>Docker est un technologie qui a &#xE9;t&#xE9; mise en place avec l&apos;esprit suivant: un conteneur, un processus. D&#xE8;s lors, d&#xE8;s qu&apos;un processus se termine son conteneur va s&apos;arr&#xEA;ter. Afin d&apos;&#xE9;viter cette situation nous allons utilise run superviseur de processus: S6.</p>
+<p>On remplace le <code>TODO: [S6] Install</code> dans la docker image de <strong>HAProxy</strong> et de <strong>l&apos;application WEB</strong>.</p>
+<ul>
+<li>Pour <strong>HAProxy</strong> et <strong>l&apos;application WEB</strong>:<pre data-role="codeBlock" data-info class="language-"><code># TODO: [S6] Install
+# Download and install S6 overlay
+RUN curl -sSLo /tmp/s6.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64.tar.gz \
+&amp;&amp; tar xzf /tmp/s6.tar.gz -C / \
+&amp;&amp; rm -f /tmp/s6.tar.gz
+</code></pre></li>
+</ul>
+<p>On modifie le <code>LABEL</code> par notre nom et email:</p>
+<ul>
+<li>Pour <strong>HAProxy</strong> et <strong>l&apos;application WEB</strong>:<pre data-role="codeBlock" data-info class="language-"><code># TODO: [GEN] Replace with your name and email
+LABEL Vincent Canipel &lt;vincent.canipel@heig-vd.ch&gt;
+</code></pre></li>
+</ul>
+<p>On configure S6 comme le principal processus sur les deux images:</p>
+<ul>
+<li>Pour <strong>HAProxy</strong> et <strong>l&apos;application WEB</strong>:<pre data-role="codeBlock" data-info class="language-"><code># TODO: [S6] Replace the following instruction
+# This will start S6 as our main process in our container
+ENTRYPOINT [&quot;/init&quot;]
+</code></pre></li>
+</ul>
+<p>Si on construit et on fait tourner les images, on n&apos;obtient rien:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>s1         | [services.d] done.
+s2         | [services.d] done.
+ha         | [services.d] done.
+</code></pre><p>Il faut mettre en place les <strong>scripts</strong> pour faire fonctionner correctement notre superviseur, ainsi on commence par cr&#xE9;er les dossiers <strong>/services/ha</strong> et <strong>/services/node</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>mkdir -p ha/services/ha webapp/services/node
+</code></pre><p>Puis on copie les fichiers <strong><a href="http://run.sh">run.sh</a></strong> dans ces nouveaux fichiers:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>cp cp ./ha/scripts/run.sh ./ha/services/ha/run &amp;&amp; chmod +x ./ha/services/ha/run
+cp /webapp/scripts/run.sh /webapp/services/node/run &amp;&amp; chmod +x /webapp/services/node/run
+</code></pre><p>Puis on remplace <code>#!/bin/sh</code> par <code>#!/usr/bin/with-contenv bash</code> dans les deux fichiers run.</p>
+<p>Finalement, on modifie de nouveau les deux Dockerfiles:</p>
+<ul>
+<li>Pour <strong>HAProxy</strong>:</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [S6] Replace the two following instructions
+# Copy the S6 service and make the run script executable
+COPY services/ha /etc/services.d/ha
+RUN chmod +x /etc/services.d/ha/run
+</code></pre><ul>
+<li>Pour <strong>application WEB</strong>:</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [S6] Replace the two following instructions
+# Copy the S6 service and make the run script executable
+COPY services/node /etc/services.d/node
+RUN chmod +x /etc/services.d/node/run
+</code></pre><hr>
+<h3 class="mume-header" id="span-classreponser%C3%A9ponsesspan-a-namec1-repa"><span class="reponse">R&#xC9;PONSES</span> <a name="C1-rep" href></a></h3>
+
+<h4 class="mume-header" id="span-classquestionfinisquestion-1span-a-namec1-q1a"><span class="questionFinis">Question 1</span> <a name="C1-q1" href></a></h4>
+
+<p>Apr&#xE8;s toutes les modifications pr&#xE9;c&#xE9;dentes, on reprend une capture d&apos;&#xE9;cran du tableau de bord &#xE0; l&apos;adresse: <a href="http://192.168.42.42:1936">http://192.168.42.42:1936</a>.</p>
+<img src="./CHAP1-1.png">
+<h4 class="mume-header" id="span-classquestionencoursquestion-2-a-verifierspan-a-namec1-q2a"><span class="questionEnCours">Question 2 A VERIFIER</span> <a name="C1-q2" href></a></h4>
+
+<p>Cette t&#xE2;che a pour but de modifier le comportement originel du syst&#xE8;me de docker qui est basiquement: un processus pour un conteneur. La configuration est assez difficile car elle demande d&apos;imbriquer plusieurs &#xE9;l&#xE9;ments avec le superviseur S6.</p>
+<p>Cette installation consiste alors &#xE0; remplacer le mode de lancement normal d&apos;un conteneur en passant avec un superviseur qui utilisera son propre script de fonctionnement pour g&#xE9;rer les processus du conteneur dans lequel il est install&#xE9;.</p>
+<p>On installe ce genre de processus pour &#xE9;viter que les conteneurs, en cas de crash s&apos;&#xE9;teignent compl&#xE8;tement et n&#xE9;cessitent alors d&apos;&#xEA;tre totalement relanc&#xE9;s. En effet, les superviseurs offrent un plus grand champs d&apos;action dans la gestion des processus comme pouvoir:<br>
+- Relancer un process en cas de crash<br>
+- Relancer un groupe de process en cas de probl&#xE8;me<br>
+- Faciliter le lancement des diff&#xE9;rents process<br>
+- Utiliser plusieurs process qui ont besoin d&apos;une certaine coordination</p>
+<h2 class="mume-header" id="chapitre-2-ajout-dun-outil-pour-g%C3%A9rer-lappartenance-au-cluster-des-serveurs-web-a-namec2a">Chapitre 2: Ajout d&apos;un outil pour g&#xE9;rer l&apos;appartenance au cluster des serveurs WEB <a name="C2" href></a></h2>
+
+<p>Le but de cette partie est de rendre l&apos;infrastructure plus flexible pour pouvoir ajouter ou supprimer dynamiquement des serveurs web. Pour cela nous allons utiliser <strong>serf</strong> qui va nous permettre de faire communiquer les agents entre eux par <strong>un syst&#xE8;me peer-to-peer d&#xE9;centralis&#xE9;</strong>.</p>
+<p>Le but a atteindre sera alors:</p>
+<ul>
+<li>De pouvoir lancer le load balancer <strong>HAProxy</strong> aussi longtemps que possible</li>
+<li>D&#xE9;marrer un ou plusieurs noeuds en backend &#xE0; n&apos;importe quel moment quand le load balancer est lanc&#xE9;</li>
+<li>Faire en sorte que le load balancer est les informations sur les noeuds qui apparaissent et disparaissent et qu&apos;il soit capable de r&#xE9;agir aux diff&#xE9;rents &#xE9;v&#xE9;nements qui peuvent survenir.</li>
+</ul>
+<p>On commence par installer <strong>Serf</strong>, pour cela nous modifions les Dockerfiles de <strong>HAProxy</strong> et de <strong>l&apos;application WEB</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [Serf] Install
+# Install serf (for decentralized cluster membership: https://www.serf.io/)
+RUN mkdir /opt/bin \
+    &amp;&amp; curl -sSLo /tmp/serf.gz https://releases.hashicorp.com/serf/0.8.2/serf_0.8.2_linux_amd64.zip \
+    &amp;&amp; gunzip -c /tmp/serf.gz &gt; /opt/bin/serf \
+    &amp;&amp; chmod 755 /opt/bin/serf \
+    &amp;&amp; rm -f /tmp/serf.gz
+</code></pre><p>Maintenant, il convient de faire les configurations sur notre superviseur pour l&apos;utilisation du service <strong>Serf</strong>. On cr&#xE9;&#xE9;e un fichier d&#xE9;di&#xE9; pour <strong>HAProxy</strong> et <strong>l&apos;application WEB</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>mkdir ./ha/services/serf ./webapp/services/serf
+</code></pre><p>Puis, on y ajoute des ex&#xE9;cutables <code>run</code>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>touch /ha/services/serf/run &amp;&amp; chmod +x /ha/services/serf/run
+touch ./webapp/services/serf/run &amp;&amp; chmod +x ./webapp/services/serf/run
+</code></pre><p>On utilise le code du r&#xE9;pertoire pour ces ex&#xE9;cutables.</p>
+<p>Apr&#xE8;s la cr&#xE9;ation des deux scripts, on se doit de les prendre en compte dans les Dockerfiles. Ainsi, on ajoute aux deux:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>COPY services/serf /etc/services.d/serf
+RUN chmod +x /etc/services.d/serf/run
+</code></pre><p>Et on expose les ports pour la communication avec <strong>Serf</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [Serf] Expose ports
+# Expose the ports for Serf
+EXPOSE 7946 7373
+</code></pre><p>On v&#xE9;rifie si tous fonctionne maintenant. On reconstruit les images. Puis on nettoie les dossiers et fichiers inutiles avec les commandes:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>rm /ha/scripts/run.sh
+rm -r /webapp/scripts
+</code></pre><hr>
+<h3 class="mume-header" id="span-classreponser%C3%A9ponsesspan-a-namec2-repa"><span class="reponse">R&#xC9;PONSES</span> <a name="C2-rep" href></a></h3>
+
+<h4 class="mume-header" id="span-classquestionencoursquestion-1-ca-devrait-pas-marcher-moi-ca-marche-questionspan-a-namec2-q1a"><span class="questionEnCours">Question 1 CA DEVRAIT PAS MARCHER MOI CA MARCHE QUESTION</span> <a name="C2-q1" href></a></h4>
+
+<p>On cherche &#xE0; r&#xE9;cup&#xE9;rer les logs de nos conteneurs. On commence par lancer le conteneur <strong>ha</strong> avec la commande suivante:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network heig --link s1 --link s2 --name ha haproxy
+</code></pre><p>Puis les conteneurs <strong>s1</strong> et <strong>s2</strong> avec les commandes:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker run -d --network heig --name s1 webapp
+docker run -d --network heig --name s2 webapp
+</code></pre><p>Les logs de cette &#xE9;tape sont dans le fichier <code>/logs/task2</code></p>
+<h4 class="mume-header" id="span-classquestionencoursquestion-2-a-verifierspan-a-namec2-q2a"><span class="questionEnCours">Question 2 A VERIFIER</span> <a name="C2-q2" href></a></h4>
+
+<p>Le probl&#xE8;me que les noeuds soient cod&#xE9;s en dure dans les configurations peut s&apos;adresser avec une solution comme <strong>Serf</strong>. En effet, <strong>Serf</strong> permet de rendre plus fl&#xE9;xible la gestion des noeuds en les rendant dynamiques.</p>
+<p>C&apos;est &#xE0; travers son syst&#xE8;me de communication que <strong>Serf</strong> va permettre aux serveurs d&apos;application de communiquer avec le load balancer pour pouvoir le &apos;reconfigurer&apos; avec leurs apparitions et disparitions.</p>
+<p><strong>Serf</strong> peut maintenir une liste de membre par exemple des noeuds et lorsque l&apos;un d&apos;entre eux est en &#xE9;chec, <strong>Serf</strong> peut communiquer avec les autres membres et le load balancer pour l&apos;avertir de l&apos;&#xE9;v&#xE9;nement et modifier ses configurations.</p>
+<h4 class="mume-header" id="span-classquestionencoursquestion-3-a-verifierspan-a-namec2-q3a"><span class="questionEnCours">Question 3 A VERIFIER</span> <a name="C2-q3" href></a></h4>
+
+<p><strong>Serf</strong> fonctionne gr&#xE2;ce &#xE0; l&apos;utilisation de <strong>Serf agent</strong>. Chaque noeud doit poss&#xE9;der un <strong>Serf agent</strong> afin de pouvoir r&#xE9;cup&#xE9;rer ses informations, g&#xE9;rer des potentiels &#xE9;v&#xE9;nements, d&#xE9;tecter des crashs... Ceux sont ces <strong>Serf agents</strong> qui d&#xE9;finissent ensemble un <strong>Serf cluster</strong>.</p>
+<p>Les fonctionnalit&#xE9;s de <strong>Serf</strong> fonctionnent gr&#xE2;ce au <strong>GOSSIP protocol</strong> qui permet une communication rapide entre les diff&#xE9;rents agents d&apos;un m&#xEA;me cluster. Le <strong>GOSSIP protocol</strong> fonctionne en utilisant UDP et est bas&#xE9; sur <strong>&quot;SWIM: Scalable Weakly-consistent infection-style Process Group Membership Protocol&quot;</strong>. Par exemple, afin de pouvoir d&#xE9;tecter l&apos;inactivit&#xE9; d&apos;un noeud <strong>Serf</strong> passe par le protocole <strong>GOSSIP</strong> qui va envoyer de mani&#xE8;re p&#xE9;riodique et al&#xE9;atoirement des v&#xE9;rifications. Si un noeud ne r&#xE9;pond pas &#xE0; la v&#xE9;rification, il sera not&#xE9; suspicieux par tous les noeuds du cluster (par propagation). Si le noeud suspicieux ne l&#xE8;ve pas les suspicions, il sera consid&#xE9;rer comme &#xE9;teint et sortira du cluster.</p>
+<h2 class="mume-header" id="chapitre-3-r%C3%A9agir-au-changement-dans-la-liste-des-membres-a-namec3a">Chapitre 3: R&#xE9;agir au changement dans la liste des membres <a name="C3" href></a></h2>
+
+<p>Nous allons ajouter des scripts pour que <strong>Serf</strong> puisse g&#xE9;rer quand un membre quitter ou rejoint la liste des membres.</p>
+<pre data-role="codeBlock" data-info class="language-"><code>touch ./ha/scripts/member-join.sh &amp;&amp; chmod +x ./ha/scripts/member-join.sh
+touch ./ha/scripts/member-leave.sh &amp;&amp; chmod +x ./ha/scripts/member-leave.sh
+</code></pre><p>Puis maintenant on copie les scripts du r&#xE9;pertoire git pour <strong><a href="http://member-join.sh">member-join.sh</a></strong> et <strong><a href="http://member-leave.sh">member-leave.sh</a></strong>.</p>
+<p>Puis on modifie l&apos;image Docker de <strong>HAProxy</strong> pour faire en sorte que le conteneur puisse les utiliser:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [Serf] Copy events handler scripts
+COPY scripts /serf-handlers
+RUN chmod +x /serf-handlers/member-join.sh
+RUN chmod +x /serf-handlers/member-leave.sh
+</code></pre><p>Maintenant, nous reconstruisons l&apos;image pour <strong>HAProxy</strong> et nous lan&#xE7;ons la commande suivante <strong>(On r&#xE9;cup&#xE8;re les logs)</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker run -d -p 80:80 -p 1936:1936 -p 9999:9999 --network heig --name ha haproxy
+</code></pre><p>Puis, on lance un des deux backend conteneurs <strong>(On r&#xE9;cup&#xE8;re les logs puis rapidement encore ceux de ha)</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker run -d --network heig --name s1 webapp
+docker run -d --network heig --name s2 webapp
+</code></pre><p>Maintenant, nous allons r&#xE9;cup&#xE9;rer les logs dans le fichier serf.log dans le conteneur de <strong>HAProxy</strong> avec les commandes suivantes:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker exec -ti ha /bin/bash
+</code></pre><pre data-role="codeBlock" data-info class="language-"><code>cat /var/log/serf.log
+</code></pre><hr>
+<h3 class="mume-header" id="span-classreponser%C3%A9ponsesspan-a-namec3-repa"><span class="reponse">R&#xC9;PONSES</span> <a name="C3-rep" href></a></h3>
+
+<h4 class="mume-header" id="span-classquestionfinisquestion-1span-a-namec3-q1a"><span class="questionFinis">Question 1</span> <a name="C3-q1" href></a></h4>
+
+<p>Les logs sont disponibles dans le r&#xE9;pertoire dans le dossier <code>/logs/task3</code>:</p>
+<ul>
+<li><code>haSEUL</code> repr&#xE9;sente les logs de <strong>ha</strong> quand il est le seul conteneur a &#xEA;tre lanc&#xE9;.</li>
+<li><code>s1</code> repr&#xE9;sente les logs de <strong>s1</strong> quand il est lanc&#xE9; apr&#xE8;s <strong>ha</strong></li>
+<li><code>haAPRESs1</code> repr&#xE9;sente les logs de <strong>ha</strong> apr&#xE8;s le lancement de <strong>s1</strong>, on remarque que le script <code>member-join.sh</code> est lanc&#xE9; par l&apos;apparition du noeud de <strong>s1</strong>.</li>
+</ul>
+<h4 class="mume-header" id="span-classquestionfinisquestion-2span-a-namec3-q2a"><span class="questionFinis">Question 2</span> <a name="C3-q2" href></a></h4>
+
+<p>Les logs sont disponibles dans le r&#xE9;pertoire dans le dossier <code>/logs/task3</code> sous le nom de <code>serf</code>.</p>
+<h2 class="mume-header" id="chapitre-4-utilisation-dun-moteur-de-template-pour-facilement-g%C3%A9n%C3%A9rer-des-fichiers-de-configuration-a-namec4a">Chapitre 4: Utilisation d&apos;un moteur de template pour facilement g&#xE9;n&#xE9;rer des fichiers de configuration <a name="C4" href></a></h2>
+
+<p>Pour la mise en place du moteur de template nous allons utiliser <strong>NodeJS</strong> et <strong>Handlebars</strong>.</p>
+<p>On configure alors le Dockerfile de <strong>HAProxy</strong> pour ajouter l&apos;installation de <strong>NodeJS</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [HB] Install NodeJS
+# Install NodeJS
+RUN curl -sSLo /tmp/node.tar.xz https://nodejs.org/dist/v14.15.1/node-v14.15.1-linux-x64.tar.xz \
+  &amp;&amp; tar -C /usr/local --strip-components 1 -xf /tmp/node.tar.xz \
+  &amp;&amp; rm -f /tmp/node.tar.xz
+</code></pre><p>Pour cela on doit ajouter l&apos;installation de <code>xz-utils</code>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># Install some tools
+# TODO: [HB] Update to install required tool to install NodeJS
+RUN apt-get update &amp;&amp; apt-get -y install wget curl vim iputils-ping rsyslog xz-utils
+</code></pre><p>Puis on installe <strong>Handlebars</strong>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [HB] Install Handlebars
+# Install the handlebars-cmd node module and its dependencies
+RUN npm install -g handlebars-cmd
+</code></pre><p>Maintenant nous allons mettre &#xE0; jour le <strong>handler script</strong> pour utiliser <strong>Handlebars</strong>. Alors, on cr&#xE9;&#xE9;e le fichier <code>haproxy.cfg.hb</code> dans le dossier <code>ha/config</code>, on utilise la commande suivante:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>echo &quot;Container {{ name }} has joined the Serf cluster with the following IP address: {{ ip }}&quot; &gt;&gt; /ha/config/haproxy.cfg.hb
+</code></pre><p>Puis on modifie le Dockerfile pour r&#xE9;cup&#xE9;rer ce fichier dans les futures conteneurs:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [HB] Copy the haproxy configuration template
+RUN mkdir /config
+COPY config/haproxy.cfg.hb /config
+</code></pre><p>On met &#xE0; jour notre script <code>member-join.sh</code> avec le mod&#xE8;le fournit dans le r&#xE9;pertoire github.</p>
+<p>Et maintenant, on reconstruit l&apos;image de <strong>HAProxy</strong>. Puis on lance le conteneur et avec les commandes:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker exec -ti ha /bin/bash
+cat /tmp/haproxy.cfg
+</code></pre><p>On r&#xE9;cup&#xE8;re les logs que l&apos;on met dans le fichier <code>/logs/task4</code> avec pour nom <code>haproxycfg1</code>.</p>
+<p>On va faire un test end-to-end pour v&#xE9;rifier que tout fonctionne. Alors on va allumer les conteneurs <strong>s1</strong> et <strong>s2</strong> et v&#xE9;rifier les modifications dans les configurations dans le conteneur <strong>ha</strong>.</p>
+<ul>
+<li>
+<p>On allume avec la commande <code>docker run -d --network heig --name s1 webapp</code>, le conteneur s1. Puis on v&#xE9;rifie dans le conteneur <strong>ha</strong>, les modifications de configurations (fichier <code>haproxycfgS1</code> dans le dossier <code>/logs/task4</code>).</p>
+</li>
+<li>
+<p>On fait de m&#xEA;me avec <strong>s2</strong> (fichier <code>haproxycfgS2</code> dans le dossier <code>/logs/task4</code>).</p>
+</li>
+</ul>
+<hr>
+<h3 class="mume-header" id="span-classreponser%C3%A9ponsesspan-a-namec4-repa"><span class="reponse">R&#xC9;PONSES</span> <a name="C4-rep" href></a></h3>
+
+<h4 class="mume-header" id="span-classquestionencoursquestion-1-a-fairespan-a-namec4-q1a"><span class="questionEnCours">Question 1 A FAIRE</span> <a name="C4-q1" href></a></h4>
+
+<h4 class="mume-header" id="span-classquestionencoursquestion-2-a-fairespan-a-namec4-q2a"><span class="questionEnCours">Question 2 A FAIRE</span> <a name="C4-q2" href></a></h4>
+
+<h4 class="mume-header" id="span-classquestionfinisquestion-3span-a-namec4-q3a"><span class="questionFinis">Question 3</span> <a name="C4-q3" href></a></h4>
+
+<p>Dans le fichier <code>/logs/task4</code>, il y a 7 fichiers:<br>
+3 premiers fichiers de logs de <code>/tmp/haproxy.cfg</code>:</p>
+<ul>
+<li><code>haproxycfg1</code>, la configuration de la premi&#xE8;re &#xE9;tape, c&apos;est-&#xE0;-dire le lancement du conteneur <strong>ha</strong>.</li>
+<li><code>haproxycfgS1</code>, la configuration de la deuxi&#xE8;me &#xE9;tape, c&apos;est-&#xE0;-dire le lancement du conteneur <strong>s1</strong>.</li>
+<li><code>haproxycfgS2</code>, la configuration de la troisi&#xE8;me &#xE9;tape, c&apos;est-&#xE0;-dire le lancement du conteneur <strong>s2</strong>.<br>
+4 fichiers d&apos;informations Docker sur les conteneurs:</li>
+<li><code>dockerps</code>, le r&#xE9;sultat de la commande <code>docker ps</code></li>
+<li><code>inspectha</code>, le r&#xE9;sultat de l&apos;inspection du conteneur <strong>ha</strong>;</li>
+<li><code>inspects1</code>, le r&#xE9;sultat de l&apos;inspection du conteneur <strong>s1</strong>;</li>
+<li><code>inspects2</code>, le r&#xE9;sultat de l&apos;inspection du conteneur <strong>s2</strong>;</li>
+</ul>
+<h4 class="mume-header" id="span-classquestionencoursquestion-4-a-fairespan-a-namec4-q4a"><span class="questionEnCours">Question 4 A FAIRE</span> <a name="C4-q4" href></a></h4>
+
+<h2 class="mume-header" id="chapitre-5-g%C3%A9n%C3%A9rer-une-nouvelle-configuration-de-load-balancer-quand-la-liste-des-membres-changent-a-namec5a">Chapitre 5: G&#xE9;n&#xE9;rer une nouvelle configuration de load balancer quand la liste des membres changent <a name="C5" href></a></h2>
+
+<p>Premi&#xE8;rement, on va copier/coller le contenue de <code>ha/config/haproxy.cfg</code> dans <code>ha/config/haproxy.cfg.hb</code> avec la commande:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>cp ./ha/config/haproxy.cfg ./ha/config/haproxy.cfg.hb
+</code></pre><p>Ensuite, nous allons remplacer le contenue entre <code># HANDLEBARS START</code> et <code># HANDLEBARS STOP</code>. On obtient alors:</p>
+<pre data-role="codeBlock" data-info class="language-"><code># HANDLEBARS START
+{{#each addresses}}
+server {{ host }} {{ ip }}:3000 check
+{{/each}}
+# HANDLEBARS STOP
+</code></pre><p>On remplace le contenue de <code>member-join.sh</code> de nouveau avec le mod&#xE8;le dans le r&#xE9;pertoire github. Puis celui de <code>member-leave.sh</code>.</p>
+<p>On nettoie un peu nos fichiers de configuration:</p>
+<ul>
+<li><strong>REMOVE ALL SERVER NOT FOUND</strong></li>
+<li>On nettoie le fichier <code>ha/services/ha/run</code>:</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>#!/usr/bin/with-contenv bash
+rsyslogd -c5 2&gt;/dev/null
+
+# TODO: [CFG] Replace this command
+haproxy -f /usr/local/etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
+</code></pre><ul>
+<li>On cr&#xE9;&#xE9;e le fichier <code>/nodes</code> pour le Dockerfile de <strong>HAProxy</strong>:</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code># TODO: [CFG] Create the nodes folder
+RUN mkdir /nodes
+</code></pre><p>On relance le tout comme dans l&apos;&#xE9;tape pr&#xE9;c&#xE9;dente.</p>
+<hr>
+<h3 class="mume-header" id="span-classreponser%C3%A9ponsesspan-a-namec5-repa"><span class="reponse">R&#xC9;PONSES</span> <a name="C5-rep" href></a></h3>
+
+<h4 class="mume-header" id="span-classquestionfinisquestion-1span-a-namec5-q1a"><span class="questionFinis">Question 1</span> <a name="C5-q1" href></a></h4>
+
+<p>Dans le fichier <code>/logs/task5</code>:<br>
+3 premiers fichiers de logs de <code>/usr/local/etc/haproxy/haproxy.cfg</code>:</p>
+<ul>
+<li><code>haproxycfg</code>, la configuration de la premi&#xE8;re &#xE9;tape, c&apos;est-&#xE0;-dire le lancement du conteneur <strong>ha</strong>.</li>
+<li><code>haproxycfgs1</code>, la configuration de la deuxi&#xE8;me &#xE9;tape, c&apos;est-&#xE0;-dire le lancement du conteneur <strong>s1</strong>.</li>
+<li><code>haproxycfgs2</code>, la configuration de la troisi&#xE8;me &#xE9;tape, c&apos;est-&#xE0;-dire le lancement du conteneur <strong>s2</strong>.<br>
+4 fichiers d&apos;informations Docker sur les conteneurs:</li>
+<li><code>dockerps</code>, le r&#xE9;sultat de la commande <code>docker ps</code></li>
+<li><code>inspectHA</code>, le r&#xE9;sultat de l&apos;inspection du conteneur <strong>ha</strong>;</li>
+<li><code>inspectS1</code>, le r&#xE9;sultat de l&apos;inspection du conteneur <strong>s1</strong>;</li>
+<li><code>inspectS2</code>, le r&#xE9;sultat de l&apos;inspection du conteneur <strong>s2</strong>;</li>
+</ul>
+<h4 class="mume-header" id="span-classquestionfinisquestion-2span-a-namec5-q2a"><span class="questionFinis">Question 2</span> <a name="C5-q2" href></a></h4>
+
+<p>On trouve deux fichiers dans le dossier <code>/nodes</code>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>root@1c3d6d7aac49:/nodes# ls
+6efae4ff505f  92d0365bce2d
+</code></pre><p>On retrouve ces informations dans le fichier <code>nodesFiles2</code> dans le dossier <code>/logs/task5</code>.</p>
+<h4 class="mume-header" id="span-classquestionfinisquestion-3span-a-namec5-q3a"><span class="questionFinis">Question 3</span> <a name="C5-q3" href></a></h4>
+
+<p>On arr&#xEA;te le conteneur <strong>s2</strong>, on obtient alors dans le dossier <code>/logs/task5</code>:</p>
+<ul>
+<li>Un nouveau fichier de configuration <code>haproxycfgSTOP</code></li>
+<li>Un fichier en moins dans le dossier <code>/nodes</code> (disponible <code>nodesFiles3</code>):</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>root@1c3d6d7aac49:/nodes# ls
+92d0365bce2d
+</code></pre><h4 class="mume-header" id="span-classquestionencoursquestion-4-optionnellespan-a-namec5-q4a"><span class="questionEnCours">Question 4 - Optionnelle</span> <a name="C5-q4" href></a></h4>
+
+<h2 class="mume-header" id="chapitre-6-faire-recharger-automatiquement-sa-nouvelle-configuration-au-load-balancer-a-namec6a">Chapitre 6: Faire recharger automatiquement sa nouvelle configuration au Load Balancer <a name="C6" href></a></h2>
+
+<hr>
+<h3 class="mume-header" id="span-classreponser%C3%A9ponsesspan-a-namec6-repa"><span class="reponse">R&#xC9;PONSES</span> <a name="C6-rep" href></a></h3>
+
+<h4 class="mume-header" id="span-classquestionencoursquestion-1-a-fairespan-a-namec6-q1a"><span class="questionEnCours">Question 1 A FAIRE</span> <a name="C6-q1" href></a></h4>
+
+<h4 class="mume-header" id="span-classquestionencoursquestion-2-a-fairespan-a-namec6-q2a"><span class="questionEnCours">Question 2 A FAIRE</span> <a name="C6-q2" href></a></h4>
+
+<h4 class="mume-header" id="span-classquestionencoursquestion-3-a-fairespan-a-namec6-q3a"><span class="questionEnCours">Question 3 A FAIRE</span> <a name="C6-q3" href></a></h4>
+
+<h2 class="mume-header" id="difficult%C3%A9s-a-namediffa">Difficult&#xE9;s <a name="diff" href></a></h2>
+
+<h2 class="mume-header" id="conclusion-a-nameconclusiona">Conclusion <a name="conclusion" href></a></h2>
+
+<style>
+.questionFinis{
+    font-size: 16px;
+    color:green; 
+    font-weight:bold;
+    margin-left: 10px;
+}
+.questionEnCours{
+    font-size: 16px;
+    color:orange; 
+    font-weight:bold;
+    margin-left: 10px;
+}
+.reponse{
+    font-weight:bold;
+    color: blue;
+}
+</style>
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>
