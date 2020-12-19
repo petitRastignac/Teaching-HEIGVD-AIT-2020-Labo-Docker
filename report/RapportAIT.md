@@ -77,17 +77,96 @@ Tout cela dans un contexte dans lequel à cause d'un bogue non découvert les se
 
 On reprend le système que nous avons mis en place dans le laboratoire différent pour répondre aux questions:
 
-#### <a name="C0-M1"></a> <span class="questionEnCours">[M1] A FAIRE</span>
+#### <a name="C0-M1"></a> <span class="questionEnCours">[M1] A AMELIORER</span>
 
-#### <a name="C0-M2"></a> <span class="questionEnCours">[M2] A FAIRE</span>
+Il n'est pas possible d'utiliser la solution actuelle dans le cadre d'un environnement de production car celle-ci est trop instable.
 
-#### <a name="C0-M3"></a> <span class="questionEnCours">[M3] A FAIRE</span>
+Une telle solution dans un environnement de production possède les problèmes suivant:
+- Un nombre fixe de serveur qui induit qu'en cas de flux trop important, on ne peut pas rapidement ajouter des serveurs pour partager la charge. L'expérience utilisateur sera donc moins bonne à cause des ralentissements et autres problèmes liés à la surcharge.
+- Un nombre fixe de serveur qui induit aussi qu'en cas d'erreurs et de crash sur un serveur, on ne puisse pas le retiré et le remplacé facilement par un autre. 
 
-#### <a name="C0-M4"></a> <span class="questionEnCours">[M4] A FAIRE</span>
+#### <a name="C0-M2"></a> <span class="questionFinis">[M2]</span>
 
-#### <a name="C0-M5"></a> <span class="questionEnCours">[M5] A FAIRE</span>
+Pour ajouter une nouvelle webapp à l'infrastructure, c'est-à-dire un noeud s3 par exemple, il faudrait:
+- On commence par ajouter des variables d'environnement dans le fichier `.env` pour notre nouveau noeud:
+```
+WEBAPP_3_NAME=s3
+WEBAPP_3_IP=192.168.43.33 # modification de toutes les ip de 192.168.42.** à 192.168.43.** car la première adresse était déjà occupé
+```
+- Ensuite, il faut modifier le `docker-compose.yml` afin de permettre la création d'un conteneur **s3** supplémentaire pour l'image webapp:
+```
+  webapp3:
+       container_name: ${WEBAPP_3_NAME}
+       build:
+         context: ./webapp
+         dockerfile: Dockerfile
+       networks:
+         public_net:
+           ipv4_address: ${WEBAPP_3_IP}
+       ports:
+         - "4002:3000"
+       environment:
+            - TAG=${WEBAPP_3_NAME}
+            - SERVER_IP=${WEBAPP_3_IP}
+```
+- Puis ajouter dans le `docker-compose.yml`, la variable d'environnement pour le noeud s3 pour le conteneur **HAProxy**:
+```
+       environment:
+            - WEBAPP_1_IP=${WEBAPP_1_IP}
+            - WEBAPP_2_IP=${WEBAPP_2_IP}
+            - WEBAPP_3_IP=${WEBAPP_3_IP}
+```
+- On modifie les configurations de **HAProxy** en commençant par le fichier de configuration `haproxy.cfg`:
+```
+    server s1 ${WEBAPP_1_IP}:3000 check cookie s1 
+    server s2 ${WEBAPP_2_IP}:3000 check cookie s2 
+    # Ajout du serveur 3
+    server s3 ${WEBAPP_3_IP}:3000 check cookie s3
+```
+- On modifie les scripts de **HAProxy** en ajoutant (exemple pour `run.sh`):
+```
+sed -i 's/<s1>/$S1_PORT_3000_TCP_ADDR/g' /usr/local/etc/haproxy/haproxy.cfg
+sed -i 's/<s2>/$S2_PORT_3000_TCP_ADDR/g' /usr/local/etc/haproxy/haproxy.cfg
+# On ajoute pour s3
+sed -i 's/<s3>/$S3_PORT_3000_TCP_ADDR/g' /usr/local/etc/haproxy/haproxy.cfg
+```
+- Puis on reconstruit le tout avec l'aide de la commande:
+```
+docker-compose up --build
+```
+Au bout de ces étapes, on retrouve bien le noeud s3 supplémentaire dans la solution du td précédent:
 
-#### <a name="C0-M6"></a> <span class="questionEnCours">[M6] A FAIRE</span>
+<img src="M2_1.png"> <img src="M2_2.png">
+
+#### <a name="C0-M3"></a> <span class="questionEnCours">[M3] A AMELIORER</span>
+
+Comme nous avons pu le voir dans la question précédente l'ajout d'un nouveau noeud est long et nécessite des modifications sur plusieurs fichiers. De plus, il faut redémarrer toutes les configurations en reconstruisant les images Docker, ce qui peut être très long et empêcher le fonctionnement du load balancer pendant cette période.
+
+Il faudrait alors être capable de pouvoir ajouter et supprimer des conteneurs **webapp** et leurs configurations dans le **HAProxy** sans redémarrer toute l'infrastructure.
+
+On pourrait:
+- Définir dynamiquement pour chaque conteneur une adresse ip.
+- Être capable de communiquer cette adresse ip à la configuration de **HAProxy**.
+- Être capable de recharger la configuration de **HAProxy** sans éteindre le load balancer pour l'adapter à la nouvelle liste de noeud.
+- Être capable de communiquer les différents événements sur les différents serveurs **webapp** pour en cas de crash par exemple prévenir et changer la configuration du load balancer.
+
+#### <a name="C0-M4"></a> <span class="questionEnCours">[M4] A AMELIORER</span>
+
+La liste des noeuds dans la configuration de **HAProxy** est codé en dur. Afin de gérer de façon plus dynamique les noeuds du load balancer, on pourrait modifier le fichier de configuration lors d'événements déclencheurs sur nos **webapp** et recharger ces configurations après pour que le load balancer s'adapte.
+
+#### <a name="C0-M5"></a> <span class="questionEnCours">[M5] A AMELIORER</span>
+
+La solution actuelle n'est pas assez flexible pour permettre de push les logs des différentes machines. En effet, les conteneurs Docker ne font tourner qu'un processus, qui est ici la **webapp**. Il faudrait dès lors que le processus de la **webapp** s'en occupe ce qui n'est pas du tout son rôle.
+
+La réponse est alors **non**. Ce qu'il manque est d'un moyen de faire tourner plusieurs processus en simultané dans nos conteneurs. Pour cela nous pouvons utiliser un gestionnaire de processus comme **supervisord**.
+
+#### <a name="C0-M6"></a> <span class="questionEnCours">[M6] A AMELIORER</span>
+
+Dans la situation d'un script `run.sh` qui remplace des lignes de notre configuration avant de lancer **HAProxy** nous ne sommes pas du tout dans un système dynamique.
+
+En effet, s'il on ajoute un serveur, il faut alors modifier le script `run.sh` avant que **HAProxy** et le script ne soit lancé. Ce qui n'a alors rien de dynamique car on a une configuration statique lorsque **HAProxy** est en fonctionnement.
+
+Pour résoudre ce problème de manque de dynamisme, il faudrait pouvoir **modifier** les configurations de **HAProxy** pendant son fonctionnement et alors **relancer HAProxy** (mauvaise méthode qui peut provoquer des problèmes pour les utilisateurs) ou faire **recharger ses configurations à HAProxy** lorsque celles-ci sont modifiées.
 
 ### <a name="C0-outils"></a> Installation des outils
 
@@ -193,7 +272,7 @@ Après toutes les modifications précédentes, on reprend une capture d'écran d
 
 <img src="./CHAP1-1.png">
 
-#### <a name="C1-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
+#### <a name="C1-q2"></a> <span class="questionEnCours">Question 2 A AMELIORER</span>
 Cette tâche a pour but de modifier le comportement originel du système de docker qui est basiquement: un processus pour un conteneur. La configuration est assez difficile car elle demande d'imbriquer plusieurs éléments avec le superviseur S6.
 
 Cette installation consiste alors à remplacer le mode de lancement normal d'un conteneur en passant avec un superviseur qui utilisera son propre script de fonctionnement pour gérer les processus du conteneur dans lequel il est installé.
@@ -259,7 +338,7 @@ rm -r /webapp/scripts
 ------------
 ### <a name="C2-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <a name="C2-q1"></a> <span class="questionEnCours">Question 1 CA DEVRAIT PAS MARCHER MOI CA MARCHE QUESTION</span>
+#### <a name="C2-q1"></a> <span class="questionEnCours">Question 1</span>
 
 On cherche à récupérer les logs de nos conteneurs. On commence par lancer le conteneur **ha** avec la commande suivante:
 ```
@@ -272,7 +351,7 @@ docker run -d --network heig --name s2 webapp
 ```
 Les logs de cette étape sont dans le fichier `/logs/task2`
 
-#### <a name="C2-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
+#### <a name="C2-q2"></a> <span class="questionEnCours">Question 2 A AMELIORER</span>
 
 Le problème que les noeuds soient codés en dure dans les configurations peut s'adresser avec une solution comme **Serf**. En effet, **Serf** permet de rendre plus fléxible la gestion des noeuds en les rendant dynamiques.
 
@@ -280,7 +359,7 @@ C'est à travers son système de communication que **Serf** va permettre aux ser
 
 **Serf** peut maintenir une liste de membre par exemple des noeuds et lorsque l'un d'entre eux est en échec, **Serf** peut communiquer avec les autres membres et le load balancer pour l'avertir de l'événement et modifier ses configurations.
 
-#### <a name="C2-q3"></a> <span class="questionEnCours">Question 3 A FAIRE</span>
+#### <a name="C2-q3"></a> <span class="questionEnCours">Question 3 A AMELIORER</span>
 
 **Serf** fonctionne grâce à l'utilisation de **Serf agent**. Chaque noeud doit posséder un **Serf agent** afin de pouvoir récupérer ses informations, gérer des potentiels événements, détecter des crashs... Ceux sont ces **Serf agents** qui définissent ensemble un **Serf cluster**.
 
@@ -406,9 +485,9 @@ On va faire un test end-to-end pour vérifier que tout fonctionne. Alors on va a
 ------------
 ### <a name="C4-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <a name="C4-q1"></a> <span class="questionEnCours">Question 1 A FAIRE</span>
+#### <a name="C4-q1"></a> <span class="questionAFaire">Question 1 A FAIRE</span>
 
-#### <a name="C4-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
+#### <a name="C4-q2"></a> <span class="questionAFaire">Question 2 A FAIRE</span>
 
 #### <a name="C4-q3"></a> <span class="questionFinis">Question 3</span>
 
@@ -423,7 +502,7 @@ Dans le fichier `/logs/task4`, il y a 7 fichiers:
 - `inspects1`, le résultat de l'inspection du conteneur **s1**;
 - `inspects2`, le résultat de l'inspection du conteneur **s2**;
 
-#### <a name="C4-q4"></a> <span class="questionEnCours">Question 4 A FAIRE</span>
+#### <a name="C4-q4"></a> <span class="questionAFaire">Question 4 A FAIRE</span>
 
 
 
@@ -500,7 +579,7 @@ root@1c3d6d7aac49:/nodes# ls
 92d0365bce2d
 ```
 
-#### <a name="C5-q4"></a> <span class="questionEnCours">Question 4 - Optionnelle</span>
+#### <a name="C5-q4"></a> <span class="questionAFaire">Question 4 - Optionnelle</span>
  
 ## <a name="C6"></a> Chapitre 6: Faire recharger automatiquement sa nouvelle configuration au Load Balancer
 
@@ -570,9 +649,9 @@ bf5076b80f19        webapp              "/init"             3 minutes ago       
 On remarque que le système fonctionne bien. Il supprime les noeuds qui sont inactifs et ajoute les nouveaux noeuds au système.
 
 
-#### <a name="C6-q2"></a> <span class="questionEnCours">Question 2 A FAIRE</span>
+#### <a name="C6-q2"></a> <span class="questionAFaire">Question 2 A FAIRE</span>
 
-#### <a name="C6-q3"></a><span class="questionEnCours">Question 3 - Optionnelle</span>
+#### <a name="C6-q3"></a><span class="questionAFaire">Question 3 - Optionnelle</span>
 
 ## <a name="diff"></a> Difficultés
 
@@ -583,6 +662,12 @@ On remarque que le système fonctionne bien. Il supprime les noeuds qui sont ina
 .questionFinis{
     font-size: 16px;
     color:green; 
+    font-weight:bold;
+    margin-left: 10px;
+}
+.questionAFaire{
+    font-size: 16px;
+    color:red; 
     font-weight:bold;
     margin-left: 10px;
 }
