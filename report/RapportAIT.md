@@ -712,10 +712,7 @@ Cependant, la solution n'est pas parfaite car les sessions des utilisateurs ne s
 #### <a name="C6-q3"></a><span class="questionFinis">Question 3 - Optionnelle</span>
 
 Voici la vidéo de démonstration du bon fonctionnement du système:
-<video controls>
-    <source src="demo-ch6.mp4"
-                type="video/mp4">
-</video>
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/7DTGryH3w2s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## <a name="diff"></a> Difficultés - A AMELIORER
 
