@@ -1,9 +1,13 @@
 # AIT laboratoire 4 - Docker
 `Auteurs: CANIPEL Vincent et SEMBLAT Clément`
 
-## Introduction <a name="introduction"></a>
+## <a name="introduction"></a> Introduction
 
-## Table des matières <a name="tableofcontent"></a>
+Dans ce laboratoire nous allons nous concentrer sur une méthode pour rendre plus dynamique la mise en place de solution scalable. Le principe est de pouvoir appréhender les différents mécanismes de gestion de la virtualisation Docker afin d'en tirer le maximum mais aussi de pouvoir mettre en place des systèmes de gestion d'événements pour répondre aux imprévus et gérer en temps réel les configurations du Load Balancer.
+
+Nous aborderons ces différents concepts au travers de l'utilisation de **Docker** pour la virtualisation, **HAProxy** comme Load Balancer, **Serf** comme système de communication dit de 'potins' (gossip) et **S6** comme superviseur de processus.
+
+## <a name="tableofcontent"></a> Table des matières
 
 **[Introduction](#introduction)**
 
@@ -192,7 +196,7 @@ ce4a0057725e        heig                bridge              local
 ### <a name="C0-rep"></a> <span class="reponse">RÉPONSES</span>
 
 #### <a name="C0-q1"></a> <span class="questionFinis">Question 1</span>
-Nous pouvons nous connecter sur l'adresse suivante http://192.168.42.42:1936:
+Nous pouvons nous connecter sur l'adresse suivante http://192.168.42.42:1936 :
 
 <img src="CHAP0-Intallation-1.png">
 
@@ -485,9 +489,39 @@ On va faire un test end-to-end pour vérifier que tout fonctionne. Alors on va a
 ------------
 ### <a name="C4-rep"></a> <span class="reponse">RÉPONSES</span>
 
-#### <a name="C4-q1"></a> <span class="questionAFaire">Question 1 A FAIRE</span>
+#### <a name="C4-q1"></a> <span class="questionEnCours">Question 1 A AMELIORER</span>
 
-#### <a name="C4-q2"></a> <span class="questionAFaire">Question 2 A FAIRE</span>
+Quand nous avons ajouter `xz-utils` nous avons due reconstruire toute l'image. Une bonne pratique dans la création d'image Docker est de structurer l'image de tel sorte à ce que le cache soit le plus réutilisable possible. Alors il faudrait pour éviter le problème d'une reconstruction plus longue et non optimisé de l'image: ordonner les couches de la moins fréquemment changé à la plus fréquemment changé.
+
+Les avantages et inconvénients à la fusion du plus possible de commande sont:
+- Avantages:
+    - Les instructions `RUN`, `COPY`, `ADD` créent des couches dans l'image Docker cependant il faut minimiser les couches. La fusion de commande permet de limiter le nombre de couche et donc la taille des images.
+    - L'écriture de plusieurs commandes en une comme dans l'exemple donné sur les meilleurs pratiques de Docker:
+    ```
+    RUN apt-get update && apt-get install -y \
+        bzr \
+        cvs \
+        git \
+        mercurial \
+        subversion \
+        && rm -rf /var/lib/apt/lists/*
+    ```
+    permet d'éviter la duplication de packets, de rendre la liste plus facile à mettre à jour.
+- Inconvénients:
+    - Cela peut rendre la compréhension et la relecture de l'image compliqué
+    - La séparation des couches ne peut pas être utilisé pour séparé les installations et éviter les superpositions
+
+Quelques articles soulèvent les questions de `flattening` ou `squashing` des images. Ces méthodes consistent à réduire la taille des images en réduisant le nombre de couches pour une image, en optimisant sa création et en se débarrassant des éléments utilisés lors de la création de l'image et inutile après. Docker permet l'utilisation du drapeau `--squash` pour automatiser se processus. En voici quelque un:
+- https://labs.sogeti.com/slim-docker-images/
+- https://stackoverflow.com/questions/22713551/how-to-flatten-a-docker-image
+- http://jasonwilder.com/blog/2014/08/19/squashing-docker-images/
+
+#### <a name="C4-q2"></a> <span class="questionEnCours">Question 2 A AMELIORER</span>
+
+Améliorer l'architecture de nos images pourrait passer par l'utilisation du concept de multi-stage builds. Cela consisterait à utiliser plusieurs instructions `FROM` dans nos Dockerfiles pour bien séparer les différents éléments et optimiser la création de nos images (réduction du nombre de couches dans nos images). Par exemple, pour l'image de **HAProxy**:
+- Une instruction `FROM` pour **HAProxy** avec ensuite ses instructions propres,
+- Une instruction `FROM` pour **NodeJS** avec ensuite ses instructions propres,
+- Une instruction `FROM` pour **Serf** avec ensuite ses instructions propres ...
 
 #### <a name="C4-q3"></a> <span class="questionFinis">Question 3</span>
 
@@ -502,9 +536,20 @@ Dans le fichier `/logs/task4`, il y a 7 fichiers:
 - `inspects1`, le résultat de l'inspection du conteneur **s1**;
 - `inspects2`, le résultat de l'inspection du conteneur **s2**;
 
-#### <a name="C4-q4"></a> <span class="questionAFaire">Question 4 A FAIRE</span>
+#### <a name="C4-q4"></a> <span class="questionFinis">Question 4</span>
 
+Les trois fichiers `haproxycfg1`, `haproxycfgS1` et `haproxycfgS2` ont été généré par l'activation du script `member-join.sh` qui écrit dans le fichier `/tmp/haproxy.cfg` via la ligne de commande:
+```
+handlebars --name $HOSTNAME --ip $HOSTIP < /config/haproxy.cfg.hb > /tmp/haproxy.cfg
+```
+On se trouve alors avec une seule ligne à chaque activation du script sous le format:
+```
+Container {{ name }} has joined the Serf cluster with the following IP address: {{ ip }}
+```
 
+Le problème de cette méthode sont que l'on ne conserve pas tous les événements mais que le dernier. Pour générer la configuration du load balancer, il faudra conserver les événements pour savoir si un noeud est toujours connecté par exemple et donc doit faire partie de la configuration.
+
+Par exemple, on pourrait notifier une ligne par noeud lorsque celui-ci rejoins la liste de noeud actif et supprimer cette ligne quand le noeud sort de cette même liste.
 
 ## <a name="C5"></a> Chapitre 5: Générer une nouvelle configuration de load balancer quand la liste des membres changent
 
@@ -579,7 +624,10 @@ root@1c3d6d7aac49:/nodes# ls
 92d0365bce2d
 ```
 
-#### <a name="C5-q4"></a> <span class="questionAFaire">Question 4 - Optionnelle</span>
+#### <a name="C5-q4"></a> <span class="questionFinis">Question 4 - Optionnelle</span>
+
+Au lieu d'utiliser un fichier par noeud dans un dossier. On pourrait simplement utiliser une base de donnée comme sqlite et ajouter retiré le noeud lorsque celui-ci apparaît ou disparaît.
+Ce système pourrait aussi fonctionner avec un fichier text simple sous un format csv par exemple mais l'utilisation d'une base de donnée permettrait une gestion plus poussé sans création/suppréssion de fichier.
  
 ## <a name="C6"></a> Chapitre 6: Faire recharger automatiquement sa nouvelle configuration au Load Balancer
 
@@ -649,25 +697,42 @@ bf5076b80f19        webapp              "/init"             3 minutes ago       
 On remarque que le système fonctionne bien. Il supprime les noeuds qui sont inactifs et ajoute les nouveaux noeuds au système.
 
 
-#### <a name="C6-q2"></a> <span class="questionAFaire">Question 2 A FAIRE</span>
+#### <a name="C6-q2"></a> <span class="questionEnCours">Question 2 A AMELIORER</span>
 
-#### <a name="C6-q3"></a><span class="questionAFaire">Question 3 - Optionnelle</span>
+Notre solution semble très efficace pour une gestion dynamique de la charge sur nos système. Le système d'événement permet d'être très flexible sur les solutions qui peuvent être apporté pour la gestion de la fermeture et de l'ouverture de noeuds.
 
-## <a name="diff"></a> Difficultés
+Cependant, la solution n'est pas parfaite car les sessions des utilisateurs ne sont pas partagées entre les noeuds et les crash à répétition à cause du problème sur les serveurs pourraient poser problème pour l'experience utilisateur des clients qui ne pourrait par exemple pas conserver leurs paniers ou encore essuyer des problèmes de connexion au même serveur en pleine achat, ce qui n'est pas du tout agréable.
 
-## <a name="conclusion"></a> Conclusion
+- Faire autrement ?
+    - On pourrait à la place de l'utilisation d'un service comme serf définir un ensemble de serveur sur notre Load Balancer qui ne serait pas toujours utiliser mais qui serait directement configurer dans **HAProxy**. On aurait pour avantage de ne pas modifier les configurations de **HAProxy** mais pour désavantage de n'avoir qu'un nombre limité de serveur pouvant être allumé et redémarré. Ainsi, lors d'afflux important on pourrait allumer les serveurs 10, 11 et 12 qui normalement ne le sont pas sans modifications de configuration car ils sont déjà configurer sur le Load Balancer.
 
+- Améliorer la solution du laboratoire ?
+    - Mettre en place un système d'appel de lancement de noeud automatisé par le Load Balancer pourrait être intéressant. Il pourrait alors automatiquement décidé de demander plus de ressource ou moins de ressource en fonction de l'afflux et ce en temps réel. Cependant, cette méthode demande de bien mettre en place ce système pour éviter des surréactions ou des sous réaction de la part du Load Balancer. 
+
+#### <a name="C6-q3"></a><span class="questionFinis">Question 3 - Optionnelle</span>
+
+Voici la vidéo de démonstration du bon fonctionnement du système:
+<video controls>
+    <source src="demo-ch6.mp4"
+                type="video/mp4">
+</video>
+
+## <a name="diff"></a> Difficultés - A AMELIORER
+
+Les difficultés de ce laboratoire se trouvent notamment dans la prise en main des divers outils comme le manager de processus ou Serf. Cependant, les questions nous poussent à chercher comment fonctionnent ces différents éléments pour bien les comprendre et ainsi pouvoir les appréhender. Leurs utilisations en finis simplifiées.
+
+## <a name="conclusion"></a> Conclusion - A AMELIORER
+
+Pour conclure, mettre en production un système demande de bien construire a priori ses infrastructures pour le rendre le plus efficace possible.
+
+Parmi cette recherche d'efficacité de nos solutions la notion de scalabilité dynamique est primordiale car elle permet de gérer les ressources allouer à la solution selon ses besoins.
+
+Ainsi, l'utilisation de la virtualisation est très adapté à cette problématique et en l'associant avec des outils tel qu'un Load Balancer comme **HAProxy** et des systèmes de communication comme **Serf**, on peut adapter des serveurs d'application à recevoir d'importante charge en minimisant l'impact aperçu par les utilisateurs et ce en réduisant les coups quand moins de ressources sont requises.  
 
 <style>
 .questionFinis{
     font-size: 16px;
     color:green; 
-    font-weight:bold;
-    margin-left: 10px;
-}
-.questionAFaire{
-    font-size: 16px;
-    color:red; 
     font-weight:bold;
     margin-left: 10px;
 }
