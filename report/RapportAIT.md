@@ -648,7 +648,7 @@ On peut alors reconstruire et lancer nos images.
 ------------
 ### <a name="C6-rep"></a> RÉPONSES
 
-#### <a name="C6-q1"> Question 1
+#### <a name="C6-q1"></a> Question 1
 
 Pour lancer **HAProxy**, on utilise la commande:
 ```
