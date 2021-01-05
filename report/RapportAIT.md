@@ -96,7 +96,7 @@ Une telle solution dans un environnement de production possède les problèmes s
 #### <a name="C0-M2"></a> [M2]
 
 Pour ajouter une nouvelle webapp à l'infrastructure, c'est-à-dire un nœud s3 par exemple, il faudrait:
-- On commence par ajouter des variables d'environnement dans le fichier `.env` pour notre nouveau nœud:
+- Ajouter des variables d'environnement dans le fichier `.env` pour notre nouveau nœud:
 ```
 WEBAPP_3_NAME=s3
 WEBAPP_3_IP=192.168.43.33 # modification de toutes les ip de 192.168.42.** à 192.168.43.** car la première adresse était déjà occupé
@@ -376,7 +376,7 @@ Les fonctionnalités de **Serf** fonctionnent grâce au **GOSSIP protocol** qui 
 
 ## <a name="C3"></a> Chapitre 3: Réagir au changement dans la liste des membres
 
-Nous allons ajouter des scripts pour que **Serf** puisse gérer quand un membre quitter où rejoint la liste des membres.
+Nous allons ajouter des scripts pour que **Serf** puisse gérer quand un membre quitte ou rejoint la liste des membres.
 
 ```
 touch ./ha/scripts/member-join.sh && chmod +x ./ha/scripts/member-join.sh
