@@ -713,11 +713,11 @@ Cependant, la solution n'est pas parfaite car les sessions des utilisateurs ne s
 
 Voici la vidéo de démonstration du bon fonctionnement du système: https://www.youtube.com/watch?v=7DTGryH3w2s
 
-## <a name="diff"></a> Difficultés - 
+## <a name="diff"></a> Difficultés
 
 Les difficultés de ce laboratoire se trouvent notamment dans la prise en main des divers outils comme le manager de processus ou Serf. Cependant, les questions nous poussent à chercher comment fonctionnent ces différents éléments pour bien les comprendre et ainsi pouvoir les appréhender. Leurs utilisations en finissent simplifiées.
 
-## <a name="conclusion"></a> Conclusion - 
+## <a name="conclusion"></a> Conclusion
 
 Pour conclure, mettre en production un système demande de bien construire a priori ses infrastructures pour le rendre le plus efficace possible.
 
