@@ -1,6 +1,7 @@
 # AIT laboratoire 4 - Docker
 `Auteurs: CANIPEL Vincent et SEMBLAT Clément`
-Lien vers le dépôt: `https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker`
+
+Lien vers le dépôt: https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker
 
 ## <a name="introduction"></a> Introduction
 
