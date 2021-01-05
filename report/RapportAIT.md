@@ -3,6 +3,8 @@
 
 Lien vers le dépôt: https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker
 
+Lien vers le rapport (sans problème de formatage): https://github.com/petitRastignac/Teaching-HEIGVD-AIT-2020-Labo-Docker/blob/master/report/RapportAIT.md
+
 ## <a name="introduction"></a> Introduction
 
 Dans ce laboratoire nous allons nous concentrer sur une méthode pour rendre plus dynamique la mise en place de solution scalable. Le principe est de pouvoir appréhender les différents mécanismes de gestion de la virtualisation Docker afin d'en tirer le maximum mais aussi de pouvoir mettre en place des systèmes de gestion d'événements pour répondre aux imprévus et gérer en temps réel les configurations du Load Balancer.
@@ -197,7 +199,7 @@ ce4a0057725e        heig                bridge              local
 ------------
 ### <a name="C0-rep"></a> RÉPONSES
 
-#### <a name="C0-q1">Question 1
+#### <a name="C0-q1"></a> Question 1
 Nous pouvons nous connecter sur l'adresse suivante http://192.168.42.42:1936 :
 
 <img src="CHAP0-Intallation-1.png">
@@ -215,7 +217,8 @@ On remplace le `TODO: [S6] Install` dans la docker image de **HAProxy** et de **
     ```
     # TODO: [S6] Install
     # Download and install S6 overlay
-    RUN curl -sSLo /tmp/s6.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64.tar.gz \
+    RUN curl -sSLo /tmp/s6.tar.gz https://github.com/just-containers/
+    s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64.tar.gz \
     && tar xzf /tmp/s6.tar.gz -C / \
     && rm -f /tmp/s6.tar.gz
     ```
@@ -273,7 +276,7 @@ RUN chmod +x /etc/services.d/node/run
 ------------
 ### <a name="C1-rep"></a> RÉPONSES
 
-#### <a name="C1-q1"> Question 1
+#### <a name="C1-q1"></a> Question 1
 Après toutes les modifications précédentes, on reprend une capture d'écran du tableau de bord à l'adresse: http://192.168.42.42:1936.
 
 <img src="./CHAP1-1.png">
@@ -416,14 +419,14 @@ cat /var/log/serf.log
 ------------
 ### <a name="C3-rep"></a> RÉPONSES
 
-#### <a name="C3-q1">Question 1
+#### <a name="C3-q1"></a> Question 1
 
 Les logs sont disponibles dans le répertoire dans le dossier `/logs/task3`:
 - `haSEUL` représente les logs de **ha** quand il est le seul conteneur a être lancé.
 - `s1` représente les logs de **s1** quand il est lancé après **ha**
 - `haAPRESs1` représente les logs de **ha** après le lancement de **s1**, on remarque que le script `member-join.sh` est lancé par l'apparition du nœud de **s1**.
 
-#### <a name="C3-q2">Question 2
+#### <a name="C3-q2"></a> Question 2
 
 Les logs sont disponibles dans le répertoire dans le dossier `/logs/task3` sous le nom de `serf`.
 
@@ -460,7 +463,8 @@ RUN npm install -g handlebars-cmd
 Maintenant nous allons mettre à jour le **handler script** pour utiliser **Handlebars**. Alors, on crée le fichier `haproxy.cfg.hb` dans le dossier `ha/config`, on utilise la commande suivante:
 
 ```
-echo "Container {{ name }} has joined the Serf cluster with the following IP address: {{ ip }}" >> /ha/config/haproxy.cfg.hb
+echo "Container {{ name }} has joined the Serf 
+cluster with the following IP address: {{ ip }}" >> /ha/config/haproxy.cfg.hb
 ```
 
 Puis on modifie le Dockerfile pour récupérer ce fichier dans les futurs conteneurs:
@@ -525,7 +529,7 @@ Améliorer l'architecture de nos images pourrait passer par l'utilisation du con
 - Une instruction `FROM` pour **NodeJS** avec ensuite ses instructions propres,
 - Une instruction `FROM` pour **Serf** avec ensuite ses instructions propres ...
 
-#### <a name="C4-q3">Question 3
+#### <a name="C4-q3"></a> Question 3
 
 Dans le fichier `/logs/task4`, il y a 7 fichiers:
 3 premiers fichiers de logs de `/tmp/haproxy.cfg`:
@@ -538,7 +542,7 @@ Dans le fichier `/logs/task4`, il y a 7 fichiers:
 - `inspects1`, le résultat de l'inspection du conteneur **s1**;
 - `inspects2`, le résultat de l'inspection du conteneur **s2**;
 
-#### <a name="C4-q4">Question 4
+#### <a name="C4-q4"></a> Question 4
 
 Les trois fichiers `haproxycfg1`, `haproxycfgS1` et `haproxycfgS2` ont été généré par l'activation du script `member-join.sh` qui écrit dans le fichier `/tmp/haproxy.cfg` via la ligne de commande:
 ```
@@ -594,7 +598,7 @@ On relance le tout comme dans l'étape précédente.
 ------------
 ### <a name="C5-rep"></a> RÉPONSES
 
-#### <a name="C5-q1"> Question 1
+#### <a name="C5-q1"></a> Question 1
 
 Dans le fichier `/logs/task5`:
 3 premiers fichiers de logs de `/usr/local/etc/haproxy/haproxy.cfg`:
@@ -607,7 +611,7 @@ Dans le fichier `/logs/task5`:
 - `inspectS1`, le résultat de l'inspection du conteneur **s1**;
 - `inspectS2`, le résultat de l'inspection du conteneur **s2**;
 
-#### <a name="C5-q2"> Question 2
+#### <a name="C5-q2"></a> Question 2
 
 On trouve deux fichiers dans le dossier `/nodes`:
 ```
@@ -616,7 +620,7 @@ root@1c3d6d7aac49:/nodes# ls
 ```
 On retrouve ces informations dans le fichier `nodesFiles2` dans le dossier `/logs/task5`.
 
-#### <a name="C5-q3"> Question 3
+#### <a name="C5-q3"></a> Question 3
 
 On arrête le conteneur **s2**, on obtient alors dans le dossier `/logs/task5`:
 - Un nouveau fichier de configuration `haproxycfgSTOP`
@@ -626,7 +630,7 @@ root@1c3d6d7aac49:/nodes# ls
 92d0365bce2d
 ```
 
-#### <a name="C5-q4"> Question 4 - Optionnelle
+#### <a name="C5-q4"></a> Question 4 - Optionnelle
 
 Au lieu d'utiliser un fichier par nœud dans un dossier. On pourrait simplement utiliser une base de données comme sqlite et ajouter/retirer le nœud lorsque celui-ci apparaît ou disparaît.
 Ce système pourrait aussi fonctionner avec un fichier texte simple sous un format csv par exemple mais l'utilisation d'une base de données permettrait une gestion plus poussée sans création/suppréssion de fichier.
